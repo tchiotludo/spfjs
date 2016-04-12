@@ -582,8 +582,11 @@ spf.nav.response.extract_ = function(frag) {
           var url = attr.match(spf.nav.response.AttributeRegEx.SRC);
           url = url ? url[1] : '';
           var async = spf.nav.response.AttributeRegEx.ASYNC.test(attr);
-          result['scripts'].push(
-              {url: url, text: text, name: name, async: async});
+          var json = spf.nav.response.AttributeRegEx.JSON.test(attr);
+          if (!json) {
+            result['scripts'].push(
+                {url: url, text: text, name: name, async: async});
+          }
           return '';
         }
         // A style tag is an inline style.  Parse the name attribute.
@@ -906,7 +909,8 @@ spf.nav.response.AttributeRegEx = {
   HREF: /(?:\s|^)href\s*=\s*["']?([^\s"']+)/i,
   NAME: /(?:\s|^)name\s*=\s*["']?([^\s"']+)/i,
   REL: /(?:\s|^)rel\s*=\s*["']?([^\s"']+)/i,
-  SRC: /(?:\s|^)src\s*=\s*["']?([^\s"']+)/i
+  SRC: /(?:\s|^)src\s*=\s*["']?([^\s"']+)/i,
+  JSON: /(?:\s|^)type\s*=\s*["']application\/json/i
 };
 
 
