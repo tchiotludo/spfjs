@@ -715,6 +715,34 @@ describe('spf.nav.response', function() {
       expect(result.html).toBe(expected.html);
     });
 
+    it('inject only script type javascript', function() {
+      var string = '<head>' +
+        '<script src="bar.js" name="bar" async></script>' +
+        '<script name="quatre">window.foo = 4</script>' +
+        '<script type="application/javascript">window.foo = 20</script>' +
+        '<script>window.foo = 20</script>' +
+        '<script type="text/javascript">window.foo = 20</script>' +
+        '<script type="application/ecmascript">window.foo = 20</script>' +
+        '<script type="application/x-javascript">window.foo = 20</script>' +
+        '<script type="application/json">{"foo":"bar"}</script>' +
+        '</head>';
+      var expected = {
+        scripts: [
+          {url: 'bar.js', text: '', name: 'bar', async: true},
+          {url: '', text: 'window.foo = 4', name: 'quatre', async: false},
+          {url: '', text: 'window.foo = 20', name: '', async: false},
+          {url: '', text: 'window.foo = 20', name: '', async: false},
+          {url: '', text: 'window.foo = 20', name: '', async: false},
+          {url: '', text: 'window.foo = 20', name: '', async: false},
+          {url: '', text: 'window.foo = 20', name: '', async: false}
+        ],
+        html: '<head></head>'
+      };
+
+      var result = spf.nav.response.extract_(string);
+      expect(result.scripts).toEqual(expected.scripts);
+      expect(result.html).toBe(expected.html);
+    });
   });
 
 
