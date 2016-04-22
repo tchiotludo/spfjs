@@ -582,8 +582,11 @@ spf.nav.response.extract_ = function(frag) {
           var url = attr.match(spf.nav.response.AttributeRegEx.SRC);
           url = url ? url[1] : '';
           var async = spf.nav.response.AttributeRegEx.ASYNC.test(attr);
-          var json = spf.nav.response.AttributeRegEx.JSON.test(attr);
-          if (!json) {
+          var type = spf.nav.response.AttributeRegEx.TYPE.exec(attr);
+          var inject = !type || type[1].indexOf('/javascript') > 0 ||
+              type[1].indexOf('/x-javascript') > 0 ||
+              type[1].indexOf('/ecmascript') > 0;
+          if (inject) {
             result['scripts'].push(
                 {url: url, text: text, name: name, async: async});
           }
@@ -910,7 +913,7 @@ spf.nav.response.AttributeRegEx = {
   NAME: /(?:\s|^)name\s*=\s*["']?([^\s"']+)/i,
   REL: /(?:\s|^)rel\s*=\s*["']?([^\s"']+)/i,
   SRC: /(?:\s|^)src\s*=\s*["']?([^\s"']+)/i,
-  JSON: /(?:\s|^)type\s*=\s*["']application\/json/i
+  TYPE: /(?:\s|^)type\s*=\s*["']([^"']+)["']/i
 };
 
 
