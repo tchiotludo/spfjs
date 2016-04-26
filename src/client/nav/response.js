@@ -589,8 +589,10 @@ spf.nav.response.extract_ = function(frag) {
           if (inject) {
             result['scripts'].push(
                 {url: url, text: text, name: name, async: async});
+            return '';
+          } else {
+            return full;
           }
-          return '';
         }
         // A style tag is an inline style.  Parse the name attribute.
         if (tag == 'style') {
